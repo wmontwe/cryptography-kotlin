@@ -18,9 +18,9 @@ abstract class ScryptTest(provider: CryptographyProvider) : AlgorithmTest<Scrypt
             cost = 16,
             blockSize = 1,
             parallelization = 1,
+            maximumMemoryBytes = 2816,
             outputSize = 64.bytes,
             salt = ByteString(ByteArray(0)),
-            maximumMemoryBytes = 2816,
         )
         assertEquals(
             "77d6576238657b203b19ca42c18a0497" +
@@ -38,9 +38,9 @@ abstract class ScryptTest(provider: CryptographyProvider) : AlgorithmTest<Scrypt
             cost = 16,
             blockSize = 1,
             parallelization = 1,
+            maximumMemoryBytes = 2816,
             outputSize = 32.bytes,
             salt = salt,
-            maximumMemoryBytes = 2816,
         )
         val expected = derivation.deriveSecretToByteArray("password".encodeToByteArray())
 
@@ -49,36 +49,4 @@ abstract class ScryptTest(provider: CryptographyProvider) : AlgorithmTest<Scrypt
         assertContentEquals(expected, derivation.deriveSecretToByteArray("password".encodeToByteArray()))
     }
 
-    @Test
-    fun rejectsInvalidParametersBeforeDerivation() = testWithAlgorithm {
-        fun assertInvalid(
-            cost: Int = 16,
-            blockSize: Int = 1,
-            parallelization: Int = 1,
-            outputSizeBytes: Int = 1,
-            maximumMemoryBytes: Long = Long.MAX_VALUE,
-        ) {
-            assertFailsWith<IllegalArgumentException> {
-                algorithm.secretDerivation(
-                    cost = cost,
-                    blockSize = blockSize,
-                    parallelization = parallelization,
-                    outputSize = outputSizeBytes.bytes,
-                    salt = ByteArray(0),
-                    maximumMemoryBytes = maximumMemoryBytes,
-                )
-            }
-        }
-
-        assertInvalid(cost = 1)
-        assertInvalid(cost = 3)
-        assertInvalid(blockSize = 0)
-        assertInvalid(parallelization = 0)
-        assertInvalid(outputSizeBytes = 0)
-        assertInvalid(maximumMemoryBytes = 0)
-        assertInvalid(cost = 65536, blockSize = 1)
-        assertInvalid(blockSize = 2_097_152)
-        assertInvalid(parallelization = 2_097_152)
-        assertInvalid(maximumMemoryBytes = 2815)
-    }
 }

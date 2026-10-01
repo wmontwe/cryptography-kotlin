@@ -125,8 +125,9 @@ recommends **600,000 iterations for SHA-256**.
 
 ## scrypt
 
-Scrypt is a memory-hard password-based key derivation function. It is available with the JDK BouncyCastle provider and
-OpenSSL3; the default JDK provider without BouncyCastle does not report it as supported.
+Scrypt derives cryptographic keys from passwords using a salt and configurable CPU and memory costs. Its memory-hard
+design makes large-scale password guessing expensive by requiring substantial memory as well as computation for each
+attempt.
 
 ```kotlin
 val scrypt = provider.get(Scrypt)
@@ -134,18 +135,21 @@ val password = "user-password".encodeToByteArray()
 val salt = CryptographyRandom.nextBytes(16)
 
 val derivation = scrypt.secretDerivation(
-    cost = 16384,
+    cost = 1 shl 17, // N = 2^17
     blockSize = 8,
     parallelization = 1,
+    maximumMemoryBytes = 134_223_872L, // 128 MiB plus a 6 KiB working-buffer allowance
     outputSize = 256.bits,
-    salt = salt,
-    maximumMemoryBytes = 32L * 1024 * 1024
+    salt = salt
 )
 val derivedKey = derivation.deriveSecretToByteArray(password)
 ```
 
-`maximumMemoryBytes` is a mandatory budget for provider working buffers and must satisfy the minimum documented by the
-API. It does not limit or guarantee total process resident memory (RSS).
+This example uses one of the [OWASP-recommended parameter sets](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html#scrypt)
+for `cost` (`N`), `blockSize` (`r`), and `parallelization` (`p`), which has a nominal memory cost of 128 MiB. For this
+combination, `maximumMemoryBytes` includes an additional 6 KiB working-buffer allowance. Applications should choose this
+budget independently rather than calculate it from parameters supplied by an untrusted source. The budget does not limit
+or guarantee total process resident memory (RSS).
 
 ## Supported Algorithms
 

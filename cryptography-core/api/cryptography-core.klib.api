@@ -918,8 +918,8 @@ abstract interface dev.whyoleg.cryptography.algorithms/Scrypt : dev.whyoleg.cryp
     open val id // dev.whyoleg.cryptography.algorithms/Scrypt.id|{}id[0]
         open fun <get-id>(): dev.whyoleg.cryptography/CryptographyAlgorithmId<dev.whyoleg.cryptography.algorithms/Scrypt> // dev.whyoleg.cryptography.algorithms/Scrypt.id.<get-id>|<get-id>(){}[0]
 
-    abstract fun secretDerivation(kotlin/Int, kotlin/Int, kotlin/Int, dev.whyoleg.cryptography/BinarySize, kotlin/ByteArray, kotlin/Long): dev.whyoleg.cryptography.operations/SecretDerivation // dev.whyoleg.cryptography.algorithms/Scrypt.secretDerivation|secretDerivation(kotlin.Int;kotlin.Int;kotlin.Int;dev.whyoleg.cryptography.BinarySize;kotlin.ByteArray;kotlin.Long){}[0]
-    open fun secretDerivation(kotlin/Int, kotlin/Int, kotlin/Int, dev.whyoleg.cryptography/BinarySize, kotlinx.io.bytestring/ByteString, kotlin/Long): dev.whyoleg.cryptography.operations/SecretDerivation // dev.whyoleg.cryptography.algorithms/Scrypt.secretDerivation|secretDerivation(kotlin.Int;kotlin.Int;kotlin.Int;dev.whyoleg.cryptography.BinarySize;kotlinx.io.bytestring.ByteString;kotlin.Long){}[0]
+    abstract fun secretDerivation(kotlin/Int, kotlin/Int, kotlin/Int, kotlin/Long, dev.whyoleg.cryptography/BinarySize, kotlin/ByteArray): dev.whyoleg.cryptography.operations/SecretDerivation // dev.whyoleg.cryptography.algorithms/Scrypt.secretDerivation|secretDerivation(kotlin.Int;kotlin.Int;kotlin.Int;kotlin.Long;dev.whyoleg.cryptography.BinarySize;kotlin.ByteArray){}[0]
+    open fun secretDerivation(kotlin/Int, kotlin/Int, kotlin/Int, kotlin/Long, dev.whyoleg.cryptography/BinarySize, kotlinx.io.bytestring/ByteString): dev.whyoleg.cryptography.operations/SecretDerivation // dev.whyoleg.cryptography.algorithms/Scrypt.secretDerivation|secretDerivation(kotlin.Int;kotlin.Int;kotlin.Int;kotlin.Long;dev.whyoleg.cryptography.BinarySize;kotlinx.io.bytestring.ByteString){}[0]
 
     final object Companion : dev.whyoleg.cryptography/CryptographyAlgorithmId<dev.whyoleg.cryptography.algorithms/Scrypt> // dev.whyoleg.cryptography.algorithms/Scrypt.Companion|null[0]
 }

@@ -23,19 +23,17 @@ import kotlinx.io.bytestring.*
  * requirements and available resources and enforce a memory budget when processing parameters
  * supplied by an untrusted source.
  *
- * ```
- * val cost = 16_384
- * val blockSize = 8
- * val parallelization = 1
- * val maximumMemoryBytes = 128L * blockSize * (cost + 2L * parallelization + 4L)
+ * The following example uses one of the [OWASP-recommended scrypt parameter sets](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html#scrypt),
+ * whose nominal memory cost is 128 MiB. The memory budget is higher to allow for provider working overhead.
  *
+ * ```
  * val derivation = provider.get(Scrypt).secretDerivation(
- *     cost = cost,
- *     blockSize = blockSize,
- *     parallelization = parallelization,
+ *     cost = 1 shl 17, // N = 2^17
+ *     blockSize = 8,
+ *     parallelization = 1,
+ *     maximumMemoryBytes = 134_223_872L, // 128 MiB plus a 6 KiB working-buffer allowance
  *     outputSize = 32.bytes,
  *     salt = salt,
- *     maximumMemoryBytes = maximumMemoryBytes,
  * )
  * val derivedKey = derivation.deriveSecret(password)
  * ```
@@ -68,9 +66,9 @@ public interface Scrypt : CryptographyAlgorithm {
         cost: Int,
         blockSize: Int,
         parallelization: Int,
+        maximumMemoryBytes: Long,
         outputSize: BinarySize,
         salt: ByteArray,
-        maximumMemoryBytes: Long,
     ): SecretDerivation
 
     /**
@@ -92,15 +90,15 @@ public interface Scrypt : CryptographyAlgorithm {
         cost: Int,
         blockSize: Int,
         parallelization: Int,
+        maximumMemoryBytes: Long,
         outputSize: BinarySize,
         salt: ByteString,
-        maximumMemoryBytes: Long,
     ): SecretDerivation = secretDerivation(
         cost = cost,
         blockSize = blockSize,
         parallelization = parallelization,
+        maximumMemoryBytes = maximumMemoryBytes,
         outputSize = outputSize,
         salt = salt.asByteArray(),
-        maximumMemoryBytes = maximumMemoryBytes,
     )
 }

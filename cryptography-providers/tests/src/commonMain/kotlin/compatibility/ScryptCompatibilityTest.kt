@@ -46,9 +46,9 @@ abstract class ScryptCompatibilityTest(provider: CryptographyProvider) : Compati
                 cost = parameters.cost,
                 blockSize = parameters.blockSize,
                 parallelization = parameters.parallelization,
+                maximumMemoryBytes = parameters.maximumMemoryBytes,
                 outputSize = parameters.outputSizeBytes.bytes,
                 salt = parameters.salt,
-                maximumMemoryBytes = parameters.maximumMemoryBytes,
             )
 
             repeat(derivations) {
@@ -66,9 +66,9 @@ abstract class ScryptCompatibilityTest(provider: CryptographyProvider) : Compati
                 cost = parameters.cost,
                 blockSize = parameters.blockSize,
                 parallelization = parameters.parallelization,
+                maximumMemoryBytes = parameters.maximumMemoryBytes,
                 outputSize = parameters.outputSizeBytes.bytes,
                 salt = parameters.salt,
-                maximumMemoryBytes = parameters.maximumMemoryBytes,
             )
             api.derivedSecrets.getData<DerivedSecretData>(parametersId) { (input, secret), _, _ ->
                 assertContentEquals(secret, derivation.deriveSecret(input))
