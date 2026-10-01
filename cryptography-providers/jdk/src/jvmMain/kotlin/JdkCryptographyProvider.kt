@@ -107,7 +107,7 @@ internal class JdkCryptographyProvider(private val provider: Provider?) : Crypto
     private val cache = ConcurrentHashMap<CryptographyAlgorithmId<*>, CryptographyAlgorithm?>()
 
     @Suppress("UNCHECKED_CAST")
-    override fun <A : CryptographyAlgorithm> getOrNull(identifier: CryptographyAlgorithmId<A>): A? = if (identifier == Scrypt && !JdkScrypt.isSupported(provider)) null else cache.getOrPut(identifier) {
+    override fun <A : CryptographyAlgorithm> getOrNull(identifier: CryptographyAlgorithmId<A>): A? = cache.getOrPut(identifier) {
         when (identifier) {
             MD5       -> JdkDigest(state, "MD5", MD5)
             SHA1      -> JdkDigest(state, "SHA-1", SHA1)
@@ -143,7 +143,8 @@ internal class JdkCryptographyProvider(private val provider: Provider?) : Crypto
             DH -> JdkDh(state)
             PBKDF2           -> JdkPbkdf2(state)
             HKDF             -> JdkHkdf(state, this)
-            Scrypt           -> JdkScrypt
+            Scrypt if JdkScrypt.isSupported(provider) -> JdkScrypt
+            Scrypt           -> return null
             else             -> null
         }
     } as A?
