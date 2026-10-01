@@ -11,7 +11,7 @@ import dev.whyoleg.cryptography.providers.tests.*
 import kotlinx.coroutines.test.*
 import kotlin.test.*
 
-// RFC 7914 section 12. The N=1048576 vector is intentionally excluded from routine tests (~1 GiB).
+// RFC 7914 section 12.
 abstract class ScryptTestvectorsTest(provider: CryptographyProvider) : AlgorithmTest<Scrypt>(Scrypt, provider) {
 
     private fun rfc7914TestCase(
@@ -27,9 +27,9 @@ abstract class ScryptTestvectorsTest(provider: CryptographyProvider) : Algorithm
             cost = cost,
             blockSize = blockSize,
             parallelization = parallelization,
+            maximumMemoryBytes = minimumMemoryBytes,
             outputSize = 64.bytes,
             salt = salt.encodeToByteArray(),
-            maximumMemoryBytes = minimumMemoryBytes,
         )
         assertEquals(outputHex, derivation.deriveSecretToByteArray(input.encodeToByteArray()).toHexString())
     }
@@ -73,4 +73,17 @@ abstract class ScryptTestvectorsTest(provider: CryptographyProvider) : Algorithm
                 "e61e85dc0d651e40dfcf017b45575887",
     )
 
+    @Ignore
+    @Test
+    fun rfc7914HighMemory() = rfc7914TestCase(
+        input = "pleaseletmein",
+        salt = "SodiumChloride",
+        cost = 1048576,
+        blockSize = 8,
+        parallelization = 1,
+        outputHex = "2101cb9b6a511aaeaddbbe09cf70f881" +
+                "ec568d574a2ffd4dabe5ee9820adaa47" +
+                "8e56fd8f4ba5d09ffa1c6d927c40f4c3" +
+                "37304049e8a952fbcbf45c6fa77a41a4",
+    )
 }
